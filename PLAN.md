@@ -95,9 +95,9 @@ registry entry — the dashboard is self-hosting from M1).
 ### M2 — Operate
 - [x] `.gitignore`: `projects.yaml`, `site/`, `__pycache__`
 - [x] `projects.yaml.example` + `examples/` fixtures
-- [ ] Cron/systemd-timer snippet in README (rebuild every 30 min; `git -C <repo> pull`
+- [x] Cron/systemd-timer snippet in README (rebuild every 30 min; `git -C <repo> pull`
       optional pre-step per project)
-- [ ] `tailscale serve` recipe in README for private tailnet hosting
+- [x] `tailscale serve` recipe in README for private tailnet hosting
 - [ ] **Proof:** dashboard serving over tailnet HTTPS; phone loads it; survives a reboot
 
 ### M3 — Polish that earns its keep (only after a week of real use)
