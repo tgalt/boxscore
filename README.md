@@ -10,6 +10,8 @@ No database. No LLM. No tokens. Status is **derived from checkbox state in versi
 markdown**, never summarized by anything that can hallucinate. Stale sources are badged, because
 a dashboard that looks current and isn't is worse than none.
 
+![boxscore demo dashboard](docs/screenshot.png)
+
 ## Quickstart (demo)
 
 ```bash

@@ -66,6 +66,10 @@ a.back { color:var(--accent); text-decoration:none; font-size:0.85rem; }
 a.perma { color:var(--border); text-decoration:none; font-size:0.8em; }
 a.perma:hover { color:var(--accent); }
 .warn { color:var(--amber); font-size:0.8rem; }
+nav.sorts { color:var(--muted); font-size:0.8rem; margin-bottom:1rem; }
+nav.sorts a { color:var(--muted); text-decoration:none; }
+nav.sorts a.on { color:var(--accent); }
+nav.sorts a:hover { color:var(--accent); }
 footer { color:var(--muted); font-size:0.75rem; text-align:center; padding:2rem 0; }
 """
 
@@ -218,18 +222,34 @@ def _project_page(ps: ProjectStatus) -> str:
     return "\n".join(parts)
 
 
+SORTS = {
+    "index": ("staleness", lambda ps: ({"red": 0, "unknown": 1, "amber": 2, "green": 3}[ps.worst_fresh],
+                                       ps.done / ps.total if ps.total else 1)),
+    "by-progress": ("progress", lambda ps: -(ps.done / ps.total if ps.total else 0)),
+    "by-name": ("name", lambda ps: ps.project.name.lower()),
+}
+
+
+def _sort_nav(active: str) -> str:
+    links = []
+    for fname, (label, _) in SORTS.items():
+        href = "/" if fname == "index" else f"/{fname}.html"
+        cls = ' class="on"' if fname == active else ""
+        links.append(f'<a{cls} href="{href}">{label}</a>')
+    return '<nav class="sorts">sort: ' + " · ".join(links) + "</nav>"
+
+
 def build_site(statuses: list[ProjectStatus], outdir: str) -> None:
     generated = datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
     os.makedirs(os.path.join(outdir, "p"), exist_ok=True)
 
-    # hub: stalest first, then least-done — rot floats up
-    order = {"red": 0, "unknown": 1, "amber": 2, "green": 3}
-    ranked = sorted(statuses, key=lambda ps: (order[ps.worst_fresh],
-                                              ps.done / ps.total if ps.total else 1))
-    cards = "\n".join(_card(ps) for ps in ranked)
-    hub = _page("projects", f'<div class="grid">{cards}</div>', generated)
-    with open(os.path.join(outdir, "index.html"), "w", encoding="utf-8") as fh:
-        fh.write(hub)
+    for fname, (label, key) in SORTS.items():
+        ranked = sorted(statuses, key=key)
+        cards = "\n".join(_card(ps) for ps in ranked)
+        body = _sort_nav(fname) + f'<div class="grid">{cards}</div>'
+        hub = _page("projects", body, generated)
+        with open(os.path.join(outdir, f"{fname}.html"), "w", encoding="utf-8") as fh:
+            fh.write(hub)
 
     for ps in statuses:
         page = _page(ps.project.name, _project_page(ps), generated)
