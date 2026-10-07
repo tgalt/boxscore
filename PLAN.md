@@ -98,9 +98,8 @@ registry entry — the dashboard is self-hosting from M1).
 - [x] Cron/systemd-timer snippet in README (rebuild every 30 min; `git -C <repo> pull`
       optional pre-step per project)
 - [x] `tailscale serve` recipe in README for private tailnet hosting
-- [ ] **Proof:** dashboard serving over tailnet HTTPS *(done)*; phone loads it
-      *(confirmed 2026-10-06)*; survives a reboot *(pending the next natural restart —
-      serve config persists in tailscaled state, web service is enabled)*
+- [x] **Proof:** dashboard serving over tailnet HTTPS; phone loads it (2026-10-06);
+      survived a host reboot with zero manual action (2026-10-07)
 
 ### M3 — Polish that earns its keep (only after a week of real use)
 - [x] Hub sort options: by staleness (default — rot floats up), by progress, by name
