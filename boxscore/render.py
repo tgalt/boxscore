@@ -148,6 +148,7 @@ def _page(title: str, body: str, generated: str) -> str:
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>{html.escape(title)}</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>&#9745;</text></svg>">
 <style>{CSS}</style></head>
 <body>
 <header><h1><a href="/">boxscore</a></h1><span class="sub">{html.escape(title)}</span></header>
