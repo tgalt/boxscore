@@ -1,0 +1,21 @@
+# Demo registry — run from the boxscore repo root:
+# Copy to projects.yaml (gitignored) and point at your real local checkouts.
+projects:
+  - name: Atlas
+    summary: Invoicing app heading to public beta.
+    repo: .
+    checklists: [CHECKLIST.md]
+  - name: Beacon
+    summary: Tiny launched product, all boxes ticked.
+    repo: .
+    checklists: [examples/projects/beacon/CHECKLIST.md]
+  - name: Comet
+    summary: Research spike with open questions.
+    repo: .
+    checklists: [examples/projects/comet/CHECKLIST.md]
+  - name: boxscore (self)
+    slug: boxscore
+    summary: This tool, tracking its own build plan.
+    repo: .
+    checklists: [PLAN.md]
+    link: https://github.com/tgalt/boxscore

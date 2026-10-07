@@ -1,0 +1,4 @@
+projects.yaml
+site/
+__pycache__/
+*.pyc

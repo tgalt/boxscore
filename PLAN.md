@@ -74,27 +74,27 @@ Each milestone has a proof-of-work; boxscore tracks its own build (this file is 
 registry entry — the dashboard is self-hosting from M1).
 
 ### M0 — Parser + model
-- [ ] `boxscore/parse.py`: checklist file → sections/items/fractions (pure function, no git)
-- [ ] `boxscore/gitmeta.py`: freshness + recently-changed via subprocess git (no deps)
-- [ ] `boxscore/registry.py`: load + validate `projects.yaml`, expand `~`, fail loud on
+- [x] `boxscore/parse.py`: checklist file → sections/items/fractions (pure function, no git)
+- [x] `boxscore/gitmeta.py`: freshness + recently-changed via subprocess git (no deps)
+- [x] `boxscore/registry.py`: load + validate `projects.yaml`, expand `~`, fail loud on
       missing paths
-- [ ] Unit tests on a fixtures dir (weird nesting, no headings, empty files, non-UTF8 guard)
-- [ ] **Proof:** parser output for this `PLAN.md` matches a hand count of its boxes
+- [x] Unit tests on a fixtures dir (weird nesting, no headings, empty files, non-UTF8 guard)
+- [x] **Proof:** parser output for this `PLAN.md` matches a hand count of its boxes
 
 ### M1 — Renderer + hub
-- [ ] `boxscore/render.py`: Jinja-free stdlib templating (f-strings/`string.Template`) or
+- [x] `boxscore/render.py`: Jinja-free stdlib templating (f-strings/`string.Template`) or
       vendored minimal templates — zero pip deps beyond PyYAML
 - [ ] `templates/`: hub + project page, dark theme, no external fonts/CDNs (self-contained
       CSS; privacy by default)
-- [ ] Hub card: name, summary, bar + true fraction, **Next:** line, freshness badge, link
-- [ ] Project page: per-section fractions, anchors, recently-changed accents
-- [ ] `boxscore build` CLI entry (`python -m boxscore build -c projects.yaml -o site/`)
+- [x] Hub card: name, summary, bar + true fraction, **Next:** line, freshness badge, link
+- [x] Project page: per-section fractions, anchors, recently-changed accents
+- [x] `boxscore build` CLI entry (`python -m boxscore build -c projects.yaml -o site/`)
 - [ ] **Proof:** demo registry (3 fake projects in `examples/`) renders; screenshots in README
       come from the demo, never real data
 
 ### M2 — Operate
-- [ ] `.gitignore`: `projects.yaml`, `site/`, `__pycache__`
-- [ ] `projects.yaml.example` + `examples/` fixtures
+- [x] `.gitignore`: `projects.yaml`, `site/`, `__pycache__`
+- [x] `projects.yaml.example` + `examples/` fixtures
 - [ ] Cron/systemd-timer snippet in README (rebuild every 30 min; `git -C <repo> pull`
       optional pre-step per project)
 - [ ] `tailscale serve` recipe in README for private tailnet hosting
