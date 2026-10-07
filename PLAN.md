@@ -84,8 +84,8 @@ registry entry — the dashboard is self-hosting from M1).
 ### M1 — Renderer + hub
 - [x] `boxscore/render.py`: Jinja-free stdlib templating (f-strings/`string.Template`) or
       vendored minimal templates — zero pip deps beyond PyYAML
-- [ ] `templates/`: hub + project page, dark theme, no external fonts/CDNs (self-contained
-      CSS; privacy by default)
+- [x] Hub + project page markup, dark theme, no external fonts/CDNs (self-contained CSS;
+      privacy by default) — *deviation: inline in `render.py` rather than a `templates/` dir*
 - [x] Hub card: name, summary, bar + true fraction, **Next:** line, freshness badge, link
 - [x] Project page: per-section fractions, anchors, recently-changed accents
 - [x] `boxscore build` CLI entry (`python -m boxscore build -c projects.yaml -o site/`)
@@ -98,13 +98,15 @@ registry entry — the dashboard is self-hosting from M1).
 - [x] Cron/systemd-timer snippet in README (rebuild every 30 min; `git -C <repo> pull`
       optional pre-step per project)
 - [x] `tailscale serve` recipe in README for private tailnet hosting
-- [ ] **Proof:** dashboard serving over tailnet HTTPS; phone loads it; survives a reboot
+- [ ] **Proof:** dashboard serving over tailnet HTTPS *(done — serve proxy to a
+      localhost static server; directory-serve needs root, proxy only needs operator)*;
+      phone loads it; survives a reboot *(both pending confirmation)*
 
 ### M3 — Polish that earns its keep (only after a week of real use)
 - [ ] Hub sort options: by staleness (default — rot floats up), by progress, by name
-- [ ] `boxscore check` CLI: exit non-zero if any source is red-stale (CI-able honesty)
-- [ ] Per-item permalinks back to the source file's line on GitHub (evidence links)
-- [ ] Optional JSON output (`site/status.json`) for other tools to consume
+- [x] `boxscore check` CLI: exit non-zero if any source is red-stale (CI-able honesty)
+- [x] Per-item permalinks back to the source file's line on GitHub (evidence links)
+- [x] Optional JSON output (`site/status.json`) for other tools to consume
 - [ ] **Proof:** one week of daily use without hand-editing any generated file
 
 ### M4 — Public release gate

@@ -59,3 +59,8 @@ def changed_lines(repo: str, relpath: str, days: int = 7) -> set[int]:
             count = int(m.group(2) or "1")
             lines.update(range(start, start + max(count, 1)))
     return lines
+
+
+def current_branch(repo: str) -> str:
+    out = _git(repo, "rev-parse", "--abbrev-ref", "HEAD").strip()
+    return out or "HEAD"

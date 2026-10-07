@@ -63,6 +63,8 @@ li.changed::marker { content:""; }
 .dot { color:var(--accent); font-size:0.8em; margin-left:0.35em; }
 li code { background:var(--bar-bg); padding:0 0.3em; border-radius:4px; font-size:0.85em; }
 a.back { color:var(--accent); text-decoration:none; font-size:0.85rem; }
+a.perma { color:var(--border); text-decoration:none; font-size:0.8em; }
+a.perma:hover { color:var(--accent); }
 .warn { color:var(--amber); font-size:0.8rem; }
 footer { color:var(--muted); font-size:0.75rem; text-align:center; padding:2rem 0; }
 """
@@ -75,6 +77,7 @@ class SourceStatus:
     fresh: str                    # green/amber/red/unknown
     last_date: str                # ISO or ""
     changed: set[int] = field(default_factory=set)
+    branch: str = "HEAD"
 
 
 @dataclass
@@ -125,6 +128,7 @@ def collect(projects: list[Project]) -> list[ProjectStatus]:
                 fresh=gitmeta.freshness(date),
                 last_date=date.isoformat() if date else "",
                 changed=gitmeta.changed_lines(p.repo, rel),
+                branch=gitmeta.current_branch(p.repo),
             ))
         out.append(ProjectStatus(project=p, sources=sources))
     return out
@@ -175,6 +179,13 @@ def _card(ps: ProjectStatus) -> str:
 </div>"""
 
 
+def _blob_url(link: str, branch: str, relpath: str, line: int) -> str:
+    if "github.com" not in link:
+        return ""
+    from urllib.parse import quote
+    return f"{link.rstrip('/')}/blob/{quote(branch)}/{quote(relpath)}#L{line}"
+
+
 def _project_page(ps: ProjectStatus) -> str:
     p = ps.project
     parts = [f'<a class="back" href="/">&larr; all projects</a>',
@@ -196,8 +207,11 @@ def _project_page(ps: ProjectStatus) -> str:
                 dot = ('<span class="dot" title="changed in last 7 days">&#9679;</span>'
                        if item.line in s.changed else "")
                 pad = ' style="margin-left:1.2em"' if item.indent >= 2 else ""
+                perma = _blob_url(p.link, s.branch, s.relpath, item.line)
+                anchor = (f' <a class="perma" href="{perma}" title="source line">&para;</a>'
+                          if perma else "")
                 rows.append(f'<li class="{cls}"{pad}><span class="box">{box}</span>'
-                            f"{_inline_md(item.text)}{dot}</li>")
+                            f"{_inline_md(item.text)}{dot}{anchor}</li>")
             parts.append('<ul class="items">' + "\n".join(rows) + "</ul>")
         parts.append("</section>")
     return "\n".join(parts)
@@ -221,3 +235,27 @@ def build_site(statuses: list[ProjectStatus], outdir: str) -> None:
         with open(os.path.join(outdir, "p", f"{ps.project.slug}.html"),
                   "w", encoding="utf-8") as fh:
             fh.write(page)
+
+    import json
+    payload = {
+        "generated": generated,
+        "projects": [
+            {
+                "name": ps.project.name,
+                "slug": ps.project.slug,
+                "done": ps.done,
+                "total": ps.total,
+                "next": ps.next_item,
+                "freshness": ps.worst_fresh,
+                "sources": [
+                    {"path": s.relpath, "done": s.checklist.done,
+                     "total": s.checklist.total, "freshness": s.fresh,
+                     "last_change": s.last_date}
+                    for s in ps.sources
+                ],
+            }
+            for ps in statuses
+        ],
+    }
+    with open(os.path.join(outdir, "status.json"), "w", encoding="utf-8") as fh:
+        json.dump(payload, fh, indent=1)

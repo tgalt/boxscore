@@ -34,9 +34,12 @@ Rebuild on a schedule (crontab, from the boxscore checkout):
 Serve tailnet-only, either way:
 
 ```bash
-# simplest (needs one-time: sudo tailscale set --operator=$USER)
-tailscale serve --bg --https=443 /srv/boxscore-site
-# or bind a plain static server to your machine's Tailscale IP (no root needed)
+# recommended: static server on localhost + tailscale serve proxy
+# (directory-serving via tailscale needs root; proxying only needs operator:
+#  one-time `sudo tailscale set --operator=$USER`)
+python3 -m http.server 8311 --bind 127.0.0.1 --directory /srv/boxscore-site &
+tailscale serve --bg --set-path=/ http://127.0.0.1:8311
+# alternative, zero tailscale config: bind the static server to your Tailscale IP
 python3 -m http.server 8311 --bind <your-tailscale-ip> --directory /srv/boxscore-site
 ```
 
