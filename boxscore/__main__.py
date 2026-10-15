@@ -1,7 +1,7 @@
 """boxscore CLI: build the static dashboard, or check source freshness.
 
-  python -m boxscore build -c projects.yaml -o site/
-  python -m boxscore check -c projects.yaml          # exit 2 if any source is stale
+  python -m boxscore build -c projects.toml -o site/
+  python -m boxscore check -c projects.toml          # exit 2 if any source is stale
 """
 from __future__ import annotations
 
@@ -17,11 +17,11 @@ def main(argv: list[str] | None = None) -> int:
     sub = ap.add_subparsers(dest="cmd", required=True)
 
     b = sub.add_parser("build", help="generate the static site")
-    b.add_argument("-c", "--config", default="projects.yaml")
+    b.add_argument("-c", "--config", default="projects.toml")
     b.add_argument("-o", "--out", default="site")
 
     c = sub.add_parser("check", help="exit non-zero if any source is red-stale")
-    c.add_argument("-c", "--config", default="projects.yaml")
+    c.add_argument("-c", "--config", default="projects.toml")
 
     args = ap.parse_args(argv)
     statuses = collect(load_registry(args.config))

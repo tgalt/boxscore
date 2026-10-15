@@ -16,11 +16,12 @@ a dashboard that looks current and isn't is worse than none.
 
 ```bash
 git clone https://github.com/tgalt/boxscore && cd boxscore
-python3 -m boxscore build -c examples/demo.yaml -o site/
+python3 -m boxscore build -c examples/demo.toml -o site/
 python3 -m http.server -d site 8000   # open http://localhost:8000
 ```
 
-Requires Python 3.11+ and PyYAML. Then copy `projects.yaml.example` to `projects.yaml`
+Requires Python 3.11+ — standard library only, nothing to `pip install`. Then copy
+`projects.toml.example` to `projects.toml`
 (gitignored) and point it at your own checkouts. Full design + roadmap: [PLAN.md](PLAN.md).
 
 Private hosting tip: serve `site/` over your tailnet with `tailscale serve`.
@@ -30,7 +31,7 @@ Private hosting tip: serve `site/` over your tailnet with `tailscale serve`.
 Rebuild on a schedule (crontab, from the boxscore checkout):
 
 ```cron
-*/30 * * * * cd /path/to/boxscore && python3 -m boxscore build -c projects.yaml -o /srv/boxscore-site
+*/30 * * * * cd /path/to/boxscore && python3 -m boxscore build -c projects.toml -o /srv/boxscore-site
 ```
 
 Serve tailnet-only, either way:

@@ -19,13 +19,13 @@ view time — a parser, two templates, and a cron.
 4. **Secrets-free by construction.** The tool reads local git checkouts and writes static
    files. The repo ships code + demo data only; the operator's real registry and all generated
    output are gitignored.
-5. **Boring technology.** Python 3.11+ stdlib + PyYAML. No build step, no JS framework,
+5. **Boring technology.** Python 3.11+ stdlib only (`tomllib` for config). No build step, no JS framework,
    hand-written CSS. Vanilla HTML output.
 
 ## Architecture
 
 ```
-projects.yaml (gitignored; .example ships)      ← the only config
+projects.toml (gitignored; .example ships)      ← the only config
         │
         ▼
 scan: for each project → read checklist file(s) from its local git checkout
@@ -41,18 +41,19 @@ serve: any static server. Recommended: `tailscale serve` for a private tailnet-o
        HTTPS dashboard; GitHub Pages/anything for public use cases.
 ```
 
-### Registry format (`projects.yaml`)
+### Registry format (`projects.toml`)
 
-```yaml
-projects:
-  - name: Example App
-    slug: example-app
-    summary: One-line description shown on the hub card.
-    repo: ~/code/example-app          # local checkout; boxscore never clones
-    checklists:
-      - CHECKLIST.md                  # one or more, repo-relative
-      - docs/launch-gates.md
-    link: https://github.com/you/example-app   # optional card link
+```toml
+[[projects]]
+name = "Example App"
+slug = "example-app"
+summary = "One-line description shown on the hub card."
+repo = "~/code/example-app"          # local checkout; boxscore never clones
+checklists = [                      # one or more, repo-relative
+  "CHECKLIST.md",
+  "docs/launch-gates.md",
+]
+link = "https://github.com/you/example-app"   # optional card link
 ```
 
 ### Parsing rules
@@ -76,25 +77,25 @@ registry entry — the dashboard is self-hosting from M1).
 ### M0 — Parser + model
 - [x] `boxscore/parse.py`: checklist file → sections/items/fractions (pure function, no git)
 - [x] `boxscore/gitmeta.py`: freshness + recently-changed via subprocess git (no deps)
-- [x] `boxscore/registry.py`: load + validate `projects.yaml`, expand `~`, fail loud on
+- [x] `boxscore/registry.py`: load + validate `projects.toml` (TOML via stdlib `tomllib`), expand `~`, fail loud on
       missing paths
 - [x] Unit tests on a fixtures dir (weird nesting, no headings, empty files, non-UTF8 guard)
 - [x] **Proof:** parser output for this `PLAN.md` matches a hand count of its boxes
 
 ### M1 — Renderer + hub
 - [x] `boxscore/render.py`: Jinja-free stdlib templating (f-strings/`string.Template`) or
-      vendored minimal templates — zero pip deps beyond PyYAML
+      vendored minimal templates — zero pip deps
 - [x] Hub + project page markup, dark theme, no external fonts/CDNs (self-contained CSS;
       privacy by default) — *deviation: inline in `render.py` rather than a `templates/` dir*
 - [x] Hub card: name, summary, bar + true fraction, **Next:** line, freshness badge, link
 - [x] Project page: per-section fractions, anchors, recently-changed accents
-- [x] `boxscore build` CLI entry (`python -m boxscore build -c projects.yaml -o site/`)
+- [x] `boxscore build` CLI entry (`python -m boxscore build -c projects.toml -o site/`)
 - [x] **Proof:** demo registry (3 fake projects in `examples/`) renders; screenshots in README
       come from the demo, never real data *(headless-Chrome shot of the demo build)*
 
 ### M2 — Operate
-- [x] `.gitignore`: `projects.yaml`, `site/`, `__pycache__`
-- [x] `projects.yaml.example` + `examples/` fixtures
+- [x] `.gitignore`: `projects.toml`, `site/`, `__pycache__`
+- [x] `projects.toml.example` + `examples/` fixtures
 - [x] Cron/systemd-timer snippet in README (rebuild every 30 min; `git -C <repo> pull`
       optional pre-step per project)
 - [x] `tailscale serve` recipe in README for private tailnet hosting

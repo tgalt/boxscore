@@ -1,0 +1,28 @@
+# Demo registry — run from the boxscore repo root:
+# Copy to projects.toml (gitignored) and point at your real local checkouts.
+
+[[projects]]
+name = "Atlas"
+summary = "Invoicing app heading to public beta."
+repo = "."
+checklists = ["examples/projects/atlas/CHECKLIST.md"]
+
+[[projects]]
+name = "Beacon"
+summary = "Tiny launched product, all boxes ticked."
+repo = "."
+checklists = ["examples/projects/beacon/CHECKLIST.md"]
+
+[[projects]]
+name = "Comet"
+summary = "Research spike with open questions."
+repo = "."
+checklists = ["examples/projects/comet/CHECKLIST.md"]
+
+[[projects]]
+name = "boxscore (self)"
+slug = "boxscore"
+summary = "This tool, tracking its own build plan."
+repo = "."
+checklists = ["PLAN.md"]
+link = "https://github.com/tgalt/boxscore"

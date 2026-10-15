@@ -1,11 +1,10 @@
-"""Load and validate the projects registry (projects.yaml). Fail loud, fail early."""
+"""Load and validate the projects registry (projects.toml). Fail loud, fail early."""
 from __future__ import annotations
 
 import os
 import re
+import tomllib
 from dataclasses import dataclass, field
-
-import yaml
 
 
 @dataclass
@@ -25,12 +24,20 @@ def _slugify(name: str) -> str:
 
 
 def load_registry(path: str) -> list[Project]:
-    with open(path, encoding="utf-8") as fh:
-        data = yaml.safe_load(fh) or {}
+    if path.endswith((".yaml", ".yml")):
+        raise SystemExit(f"{path}: YAML registries are no longer supported; "
+                         "convert it to TOML (see projects.toml.example)")
+    try:
+        with open(path, "rb") as fh:
+            data = tomllib.load(fh)
+    except FileNotFoundError:
+        raise SystemExit(f"{path}: registry not found")
+    except tomllib.TOMLDecodeError as e:
+        raise SystemExit(f"{path}: invalid TOML: {e}")
 
     entries = data.get("projects")
     if not isinstance(entries, list) or not entries:
-        raise SystemExit(f"{path}: expected a top-level 'projects:' list")
+        raise SystemExit(f"{path}: expected one or more [[projects]] tables")
 
     projects: list[Project] = []
     seen_slugs: set[str] = set()
