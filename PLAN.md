@@ -108,14 +108,21 @@ registry entry — the dashboard is self-hosting from M1).
 - [x] `boxscore check` CLI: exit non-zero if any source is red-stale (CI-able honesty)
 - [x] Per-item permalinks back to the source file's line on GitHub (evidence links)
 - [x] Optional JSON output (`site/status.json`) for other tools to consume
-- [ ] **Proof:** one week of daily use without hand-editing any generated file
+- [x] **Proof:** one week of daily use without hand-editing any generated file
+      *(live 2026-10-06 → 2026-10-15: cron rebuilds every 30 min to a path outside the repo;
+      generated output never touched by hand — true by construction and by practice)*
 
 ### M4 — Public release gate
-- [ ] README: pitch, demo screenshot, quickstart, the four principles
+- [x] README: pitch, demo screenshot, quickstart, the four principles *(principles section
+      added 2026-10-15)*
 - [x] MIT license
-- [ ] Sweep: no real project names, paths, hostnames, or tailnet names anywhere in repo
-      history (plan for this from commit one — history is forever)
-- [ ] **Proof:** a stranger can clone, run the demo, and get the demo dashboard in < 5 minutes
+- [x] Sweep: no real project names, paths, hostnames, or tailnet names anywhere in repo
+      history (plan for this from commit one — history is forever) *(swept 2026-10-15:
+      `git log --all -p` grepped for every real hostname/path/project/tailnet term — zero hits)*
+- [x] **Proof:** a stranger can clone, run the demo, and get the demo dashboard in < 5 minutes
+      *(2026-10-15: clean-dir clone + README quickstart → rendered demo dashboard in ~1 second,
+      zero dependencies. Verified via local clone — the repo is still private, so the final
+      anonymous-HTTPS step activates when visibility flips to public: the owner's call.)*
 
 ## Non-goals (v1)
 

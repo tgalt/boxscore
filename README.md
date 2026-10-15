@@ -26,6 +26,18 @@ Requires Python 3.11+ — standard library only, nothing to `pip install`. Then 
 
 Private hosting tip: serve `site/` over your tailnet with `tailscale serve`.
 
+## Principles
+
+1. **Status is derived, never summarized.** Every number is computed from checkbox state in
+   version-controlled markdown. If it's not in a checklist, it's not on the board.
+2. **Rot is visible.** Every source carries a freshness badge from its last git commit date
+   (green ≤ 7 d, amber ≤ 30 d, red > 30 d). A stale dashboard that looks current is worse
+   than no dashboard.
+3. **Honest progress semantics.** Bars show the real fraction (`14/31`), never a bare
+   percentage implying checklists are comparable across projects.
+4. **Secrets-free by construction.** The repo ships code + demo data only; your real registry
+   (`projects.toml`) and all generated output are gitignored.
+
 ## Operate (private dashboard pattern)
 
 Rebuild on a schedule (crontab, from the boxscore checkout):
