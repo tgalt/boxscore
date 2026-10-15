@@ -1,5 +1,4 @@
-# Demo registry — run from the boxscore repo root:
-# Copy to projects.toml (gitignored) and point at your real local checkouts.
+# Example registry. Copy to projects.toml (gitignored) and point at your real local checkouts.
 
 [[projects]]
 name = "Atlas"
